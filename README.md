@@ -80,4 +80,4 @@ Mọi đóng góp đều được hoan nghênh! Hãy gửi Pull Request hoặc t
 
 ## 📄 Bản quyền
 
-Dự án thuộc về **QR Decor Studio**.
+Dự án thuộc về **TrongThao Official**.
