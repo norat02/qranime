@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Coordinate Finder</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+      .container {
+        position: relative;
+        display: inline-block;
+        margin-top: 20px;
+        border: 2px solid #ccc;
+        background: white;
+      }
+      img {
+        display: block;
+        max-width: 100%;
+        cursor: crosshair;
+      }
+      .marker {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 0, 0, 0.7);
+        border: 2px solid white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+      }
+      .controls {
+        margin-bottom: 20px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+      }
+      textarea {
+        width: 100%;
+        height: 100px;
+        margin-top: 10px;
+        font-family: monospace;
+      }
+      .instruction {
+        color: #666;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <h2>Công cụ lấy tọa độ QR</h2>
+      <div class="instruction">
+        1. Chọn ảnh nền (bg.jpg) của template.<br />
+        2. Click lần lượt vào 4 góc nơi đặt QR theo thứ tự:
+        <b>Trên-Trái -> Trên-Phải -> Dưới-Phải -> Dưới-Trái</b>.<br />
+        3. Copy đoạn code PHP bên dưới và dán vào file index.php của template.
+      </div>
+      <input type="file" id="fileInp" accept="image/*" />
+      <button onclick="resetPoints()">Reset / Chọn lại</button>
+      <textarea id="output" readonly onclick="this.select()">
+Chưa có tọa độ...</textarea
+      >
+    </div>
+
+    <div class="container" id="imgContainer">
+      <img id="preview" src="" />
+    </div>
+
+    <script>
+      const fileInp = document.getElementById("fileInp");
+      const preview = document.getElementById("preview");
+      const container = document.getElementById("imgContainer");
+      const output = document.getElementById("output");
+      let points = [];
+
+      fileInp.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        preview.src = URL.createObjectURL(file);
+        resetPoints();
+      };
+
+      container.onclick = (e) => {
+        if (!preview.src || points.length >= 4) return;
+
+        const rect = preview.getBoundingClientRect();
+
+        // Calculate true scale in case image is resized by CSS
+        const scaleX = preview.naturalWidth / rect.width;
+        const scaleY = preview.naturalHeight / rect.height;
+
+        // Get coordinates relative to image
+        const x = Math.round((e.clientX - rect.left) * scaleX);
+        const y = Math.round((e.clientY - rect.top) * scaleY);
+
+        points.push({ x, y });
+
+        // Draw marker
+        const marker = document.createElement("div");
+        marker.className = "marker";
+        // Marker visual position depends on CSS size, not natural size
+        marker.style.left = e.clientX - rect.left + "px";
+        marker.style.top = e.clientY - rect.top + "px";
+        marker.textContent = points.length;
+        container.appendChild(marker);
+
+        updateOutput();
+      };
+
+      function updateOutput() {
+        if (points.length === 0) {
+          output.value = "Chưa có tọa độ...";
+          return;
+        }
+
+        let php = "$coords = [\n";
+        // Map points 0,1,2,3 to order
+        points.forEach((p, i) => {
+          let label = "";
+          if (i === 0) label = "// Góc trên trái";
+          if (i === 1) label = "// Góc trên phải";
+          if (i === 2) label = "// Góc dưới phải";
+          if (i === 3) label = "// Góc dưới trái";
+
+          php += `    ['x' => ${p.x}, 'y' => ${p.y}], ${label}\n`;
+        });
+        php += "];";
+
+        output.value = php;
+      }
+
+      function resetPoints() {
+        points = [];
+        document.querySelectorAll(".marker").forEach((el) => el.remove());
+        updateOutput();
+      }
+    </script>
+  </body>
+</html>

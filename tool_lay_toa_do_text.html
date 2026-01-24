@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tool Lấy Tọa Độ Chèn Chữ</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+      .container {
+        position: relative;
+        border: 2px solid #333;
+        cursor: crosshair;
+      }
+      img {
+        max-width: 800px;
+        display: block;
+      }
+      #info {
+        margin-top: 10px;
+        font-weight: bold;
+        background: #eee;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        text-align: center;
+        max-width: 800px;
+      }
+      #coords-list {
+        margin-top: 20px;
+        width: 100%;
+        max-width: 800px;
+      }
+      .coord-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
+      }
+      input[type="file"] {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tool Lấy Tọa Độ Chèn Chữ</h1>
+
+    <input type="file" id="fileInp" accept="image/*" />
+
+    <div id="info">Click vào ảnh để lấy tọa độ</div>
+
+    <div class="container" id="imgContainer" style="display: none">
+      <img id="preview" src="" />
+    </div>
+
+    <div id="coords-list"></div>
+
+    <script>
+      const fileInp = document.getElementById("fileInp");
+      const preview = document.getElementById("preview");
+      const imgContainer = document.getElementById("imgContainer");
+      const info = document.getElementById("info");
+      const coordsList = document.getElementById("coords-list");
+
+      let originalWidth = 0;
+      let originalHeight = 0;
+
+      fileInp.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = function () {
+            originalWidth = this.width;
+            originalHeight = this.height;
+            preview.src = this.src;
+            imgContainer.style.display = "block";
+            coordsList.innerHTML = ""; // Reset list
+            info.innerText = `Kích thước gốc: ${originalWidth} x ${originalHeight}. Click để chọn vị trí.`;
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      preview.onclick = (e) => {
+        const rect = preview.getBoundingClientRect();
+
+        // Tọa độ click trên element (hiển thị)
+        const xClick = e.clientX - rect.left;
+        const yClick = e.clientY - rect.top;
+
+        // Tính tỷ lệ scale
+        const scaleX = originalWidth / rect.width;
+        const scaleY = originalHeight / rect.height;
+
+        // Tọa độ thực trên ảnh gốc
+        const realX = Math.round(xClick * scaleX);
+        const realY = Math.round(yClick * scaleY);
+
+        info.innerText = `Tọa độ click: X=${realX}, Y=${realY}`;
+
+        // Add to list
+        const div = document.createElement("div");
+        div.className = "coord-item";
+        div.innerHTML = `<span>Point: <strong>X=${realX}, Y=${realY}</strong></span> <button onclick="this.parentElement.remove()">X</button>`;
+        coordsList.appendChild(div);
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,299 @@
+:root {
+  --primary-color: #0d6efd;
+  --bg-color: #f8f9fa;
+  --grid-color: rgba(0, 0, 0, 0.05);
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-color);
+  color: #212529;
+  /* Lined Grid Background */
+  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Header */
+.navbar {
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--primary-color) !important;
+  font-size: 1.25rem;
+}
+
+/* Cards */
+.template-card {
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.template-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-color: var(--primary-color);
+}
+
+.template-card.selected {
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.template-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.template-card .card-body {
+  padding: 10px;
+}
+
+.template-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  color: #333;
+}
+
+/* Sidebar / Config Box */
+.config-box {
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 90px;
+}
+
+.nav-pills .nav-link {
+  border-radius: 8px;
+  color: #555;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+.nav-pills .nav-link.active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.form-control,
+.form-select {
+  background-color: #fcfcfc;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+  border-color: var(--primary-color);
+  background-color: #fff;
+}
+
+.drop-zone {
+  border: 2px dashed #dee2e6;
+  background: #fafafa;
+  border-radius: 10px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.drop-zone:hover {
+  border-color: var(--primary-color);
+  background: rgba(13, 110, 253, 0.02);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-color);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background-color: #a0c3ff;
+  box-shadow: none;
+}
+
+/* Result Section */
+#resultSection img {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
+}
+
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.badge-count {
+  background: #f0f2f5;
+  color: #555;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+/* --- CSS CHO PLUGIN DABILUX NUÃ”I THÃ‚N --- */
+
+.dabilux-nuoi-than-container {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 10px;
+    font-family: sans-serif;
+}
+
+.dabilux-nuoi-than-trigger-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    z-index: 50;
+}
+
+@keyframes dabilux-nuoi-than-pulse-zoom {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.dabilux-nuoi-than-trigger-btn {
+    width: 60px;
+    height: auto;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    animation: dabilux-nuoi-than-pulse-zoom 2s infinite ease-in-out;
+}
+
+.dabilux-nuoi-than-trigger-wrapper:hover .dabilux-nuoi-than-trigger-btn {
+    animation-play-state: paused;
+    transform: scale(1.2);
+}
+
+.dabilux-nuoi-than-container.active .dabilux-nuoi-than-trigger-btn {
+    animation: none;
+    transform: rotate(-15deg);
+}
+
+.dabilux-nuoi-than-cta-text {
+    font-size: 11px;
+    font-weight: bold;
+    color: #d32f2f;
+    background-color: #ffeb3b;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-top: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    animation: dabilux-nuoi-than-bounce-text 2s infinite 1s;
+}
+
+@keyframes dabilux-nuoi-than-bounce-text {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.dabilux-nuoi-than-popup-content {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    transform-origin: right center;
+    width: 250px; 
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    text-align: center;
+    z-index: 40;
+}
+
+.dabilux-nuoi-than-container.active .dabilux-nuoi-than-popup-content {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dabilux-nuoi-than-qr-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.dabilux-nuoi-than-donate-text {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.dabilux-nuoi-than-popup-content::after {
+    content: '';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 8px 0 8px 8px;
+    border-color: transparent transparent transparent white;
+}
+
+@media (max-width: 400px) {
+    .dabilux-nuoi-than-popup-content {
+        width: 200px;
+    }
+    .dabilux-nuoi-than-donate-text {
+        font-size: 12px;
+    }
+}

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator - V. Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/qr-code-styling@1.9.2/lib/qr-code-styling.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .accordion-content {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .accordion-icon.active {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-header:hover {
+            background-color: #e5e7eb;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        .select2-container--default {
+            width: 100% !important;
+        }
+        
+        .select2-container--default .select2-selection--single {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            height: 42px;
+            padding: 8px 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #374151;
+            line-height: 26px;
+            padding-left: 0;
+            padding-right: 20px;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+            right: 8px;
+            width: 20px;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            color: #6b7280;
+            margin-right: 20px;
+        }
+        
+        .select2-container--default .select2-selection--single:focus,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .select2-dropdown {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .select2-search__field {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 6px 8px;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .select2-search__field:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-white mb-2">QR Generator - V. Studio</h1>
+                <p class="text-white/80">Tạo mã QR theo chuẩn Napas với tùy biến giao diện</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Thông tin giao dịch</h2>
+                    
+                    <form id="qrForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ngân hàng</label>
+                            <select id="acquierID" class="select2-bank">
+                                <option value="970415">(970415) VietinBank</option>
+                                <option value="970436">(970436) Vietcombank</option>
+                                <option value="970418">(970418) BIDV</option>
+                                <option value="970405">(970405) Agribank</option>
+                                <option value="970448">(970448) OCB</option>
+                                <option value="970422" selected>(970422) MBBank</option>
+                                <option value="970407">(970407) Techcombank</option>
+                                <option value="970416">(970416) ACB</option>
+                                <option value="970432">(970432) VPBank</option>
+                                <option value="970423">(970423) TPBank</option>
+                                <option value="970403">(970403) Sacombank</option>
+                                <option value="970437">(970437) HDBank</option>
+                                <option value="970454">(970454) VietCapitalBank</option>
+                                <option value="970429">(970429) SCB</option>
+                                <option value="970441">(970441) VIB</option>
+                                <option value="970443">(970443) SHB</option>
+                                <option value="970431">(970431) Eximbank</option>
+                                <option value="970426">(970426) MSB</option>
+                                <option value="546034">(546034) CAKE</option>
+                                <option value="546035">(546035) Ubank</option>
+                                <option value="971005">(971005) ViettelMoney</option>
+                                <option value="963388">(963388) Timo</option>
+                                <option value="971011">(971011) VNPTMoney</option>
+                                <option value="970400">(970400) SaigonBank</option>
+                                <option value="970409">(970409) BacABank</option>
+                                <option value="971133">(971133) PVcomBank Pay</option>
+                                <option value="970412">(970412) PVcomBank</option>
+                                <option value="970414">(970414) MBV</option>
+                                <option value="970419">(970419) NCB</option>
+                                <option value="970424">(970424) ShinhanBank</option>
+                                <option value="970425">(970425) ABBANK</option>
+                                <option value="970427">(970427) VietABank</option>
+                                <option value="970428">(970428) NamABank</option>
+                                <option value="970430">(970430) PGBank</option>
+                                <option value="970433">(970433) VietBank</option>
+                                <option value="970438">(970438) BaoVietBank</option>
+                                <option value="970440">(970440) SeABank</option>
+                                <option value="970446">(970446) COOPBANK</option>
+                                <option value="970449">(970449) LPBank</option>
+                                <option value="970452">(970452) KienLongBank</option>
+                                <option value="668888">(668888) KBank</option>
+                                <option value="977777">(977777) MAFC</option>
+                                <option value="970467">(970467) KEBHANAHN</option>
+                                <option value="970466">(970466) KEBHanaHCM</option>
+                                <option value="533948">(533948) Citibank</option>
+                                <option value="999888">(999888) VBSP</option>
+                                <option value="970444">(970444) CBBank</option>
+                                <option value="422589">(422589) CIMB</option>
+                                <option value="796500">(796500) DBSBank</option>
+                                <option value="970406">(970406) Vikki</option>
+                                <option value="970439">(970439) PublicBank</option>
+                                <option value="970463">(970463) KookminHCM</option>
+                                <option value="970462">(970462) KookminHN</option>
+                                <option value="970457">(970457) Woori</option>
+                                <option value="970421">(970421) VRB</option>
+                                <option value="970408">(970408) GPBank</option>
+                                <option value="970442">(970442) HongLeong</option>
+                                <option value="458761">(458761) HSBC</option>
+                                <option value="970455">(970455) IBKHN</option>
+                                <option value="970456">(970456) IBKHCM</option>
+                                <option value="801011">(801011) Nonghyup</option>
+                                <option value="970458">(970458) UnitedOverseas</option>
+                                <option value="970434">(970434) IndovinaBank</option>
+                                <option value="970410">(970410) StandardChartered</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Số tài khoản</label>
+                            <input type="text" id="consumerID" value="100000001" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Số tiền (VND)</label>
+                            <input type="text" id="amount" value="100000" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Dữ liệu bổ sung</label>
+                            <input type="text" id="additionalData" value="NIV9x86RLn" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Tùy chỉnh giao diện</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="accordion-item">
+                                                            <button class="accordion-header w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" onclick="toggleAccordion('main-options')">
+                                <span class="font-medium text-gray-800">Tùy chọn chính</span>
+                                <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="main-options" class="accordion-content hidden p-4 bg-white border-t">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Kích thước</label>
+                                        <input type="range" id="qrSize" min="200" max="500" value="300" class="w-full">
+                                        <span id="sizeValue" class="text-sm text-gray-600">300px</span>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Margin</label>
+                                        <input type="range" id="qrMargin" min="0" max="50" value="0" class="w-full">
+                                        <span id="marginValue" class="text-sm text-gray-600">0px</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <button class="accordion-header w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" onclick="toggleAccordion('dots-options')">
+                                <span class="font-medium text-gray-800">Tùy chọn Dots</span>
+                                <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="dots-options" class="accordion-content hidden p-4 bg-white border-t">
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Kiểu dots</label>
+                                        <select id="dotsType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option value="square">Square</option>
+                                            <option value="rounded">Rounded</option>
+                                            <option value="dots">Dots</option>
+                                            <option value="classy">Classy</option>
+                                            <option value="classy-rounded">Classy Rounded</option>
+                                            <option value="extra-rounded">Extra Rounded</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Màu sắc dots</label>
+                                        <input type="color" id="dotsColor" value="#000000" class="w-full h-10 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Loại màu dots</label>
+                                        <select id="dotsColorType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option value="single">Màu đơn</option>
+                                            <option value="gradient">Màu gradient</option>
+                                        </select>
+                                    </div>
+                                    <div id="dotsGradientOptions" class="hidden space-y-2">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Loại gradient</label>
+                                            <select id="dotsGradientType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                                <option value="linear">Linear</option>
+                                                <option value="radial">Radial</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Màu gradient 1</label>
+                                            <input type="color" id="dotsGradientColor1" value="#ff0000" class="w-full h-10 border border-gray-300 rounded-lg">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Màu gradient 2</label>
+                                            <input type="color" id="dotsGradientColor2" value="#0000ff" class="w-full h-10 border border-gray-300 rounded-lg">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Góc xoay (độ)</label>
+                                            <input type="range" id="dotsGradientRotation" min="0" max="360" value="0" class="w-full">
+                                            <span id="dotsRotationValue" class="text-sm text-gray-600">0°</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <button class="accordion-header w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" onclick="toggleAccordion('corners-options')">
+                                <span class="font-medium text-gray-800">Tùy chọn góc</span>
+                                <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="corners-options" class="accordion-content hidden p-4 bg-white border-t">
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-700 mb-2">Góc vuông</h4>
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="block text-xs text-gray-600 mb-1">Kiểu</label>
+                                                <select id="cornersSquareType" class="w-full px-2 py-1 text-sm border border-gray-300 rounded">
+                                                    <option value="square">Square</option>
+                                                    <option value="dot">Dot</option>
+                                                    <option value="extra-rounded">Extra Rounded</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs text-gray-600 mb-1">Màu</label>
+                                                <input type="color" id="cornersSquareColor" value="#000000" class="w-full h-8 border border-gray-300 rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-700 mb-2">Góc tròn</h4>
+                                        <div class="space-y-2">
+                                            <div>
+                                                <label class="block text-xs text-gray-600 mb-1">Kiểu</label>
+                                                <select id="cornersDotType" class="w-full px-2 py-1 text-sm border border-gray-300 rounded">
+                                                    <option value="dot">Dot</option>
+                                                    <option value="square">Square</option>
+                                                    <option value="rounded">Rounded</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs text-gray-600 mb-1">Màu</label>
+                                                <input type="color" id="cornersDotColor" value="#000000" class="w-full h-8 border border-gray-300 rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <button class="accordion-header w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" onclick="toggleAccordion('background-options')">
+                                <span class="font-medium text-gray-800">Tùy chọn nền</span>
+                                <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="background-options" class="accordion-content hidden p-4 bg-white border-t">
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Loại màu nền</label>
+                                        <select id="bgColorType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option value="single">Màu đơn</option>
+                                            <option value="gradient">Màu gradient</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Màu nền</label>
+                                        <input type="color" id="bgColor" value="#ffffff" class="w-full h-10 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div id="bgGradientOptions" class="hidden space-y-2">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Loại gradient nền</label>
+                                            <select id="bgGradientType" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                                <option value="linear">Linear</option>
+                                                <option value="radial">Radial</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Màu gradient nền 1</label>
+                                            <input type="color" id="bgGradientColor1" value="#ffffff" class="w-full h-10 border border-gray-300 rounded-lg">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Màu gradient nền 2</label>
+                                            <input type="color" id="bgGradientColor2" value="#f0f0f0" class="w-full h-10 border border-gray-300 rounded-lg">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Góc xoay nền (độ)</label>
+                                            <input type="range" id="bgGradientRotation" min="0" max="360" value="0" class="w-full">
+                                            <span id="bgRotationValue" class="text-sm text-gray-600">0°</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item">
+                            <button class="accordion-header w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors" onclick="toggleAccordion('image-options')">
+                                <span class="font-medium text-gray-800">Tùy chọn ảnh</span>
+                                <svg class="accordion-icon w-5 h-5 text-gray-600 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div id="image-options" class="accordion-content hidden p-4 bg-white border-t">
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload ảnh (Logo)</label>
+                                        <div class="flex gap-2">
+                                            <input type="file" id="qrImage" accept="image/*" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg">
+                                            <button type="button" id="deleteImage" onclick="deleteImage()" class="px-3 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors hidden">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div id="imageInfo" class="text-xs text-gray-500 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Kích thước ảnh (%)</label>
+                                        <input type="range" id="imageSize" min="10" max="50" value="20" class="w-full">
+                                        <span id="imageSizeValue" class="text-sm text-gray-600">20%</span>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Margin ảnh (px)</label>
+                                        <input type="range" id="imageMargin" min="0" max="20" value="0" class="w-full">
+                                        <span id="imageMarginValue" class="text-sm text-gray-600">0px</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="hideBackgroundDots" class="mr-2">
+                                        <label for="hideBackgroundDots" class="text-sm text-gray-700">Ẩn dots phía sau ảnh</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white rounded-2xl p-6 card-shadow">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">QR Code</h2>
+                <div id="qrContainer" class="flex justify-center">
+                    <div class="text-gray-500 text-center py-12">
+                        <svg class="w-24 h-24 mx-auto mb-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                        </svg>
+                        <p>Nhấn "Tạo QR Code" để hiển thị</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let qrCode = null;
+        let uploadedImage = null;
+        
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const header = content.previousElementSibling;
+            const icon = header.querySelector('.accordion-icon');
+            
+            content.classList.toggle('hidden');
+            icon.classList.toggle('active');
+            
+            const allContents = document.querySelectorAll('.accordion-content');
+            const allIcons = document.querySelectorAll('.accordion-icon');
+            
+            allContents.forEach((item, index) => {
+                if (item.id !== id && !item.classList.contains('hidden')) {
+                    item.classList.add('hidden');
+                    allIcons[index].classList.remove('active');
+                }
+            });
+        }
+        
+        document.getElementById('qrSize').addEventListener('input', function() {
+            document.getElementById('sizeValue').textContent = this.value + 'px';
+        });
+        
+        document.getElementById('qrMargin').addEventListener('input', function() {
+            document.getElementById('marginValue').textContent = this.value + 'px';
+        });
+        
+        document.getElementById('imageSize').addEventListener('input', function() {
+            document.getElementById('imageSizeValue').textContent = this.value + '%';
+        });
+        
+        document.getElementById('imageMargin').addEventListener('input', function() {
+            document.getElementById('imageMarginValue').textContent = this.value + 'px';
+        });
+        
+        document.getElementById('dotsGradientRotation').addEventListener('input', function() {
+            document.getElementById('dotsRotationValue').textContent = this.value + '°';
+        });
+        
+        document.getElementById('bgGradientRotation').addEventListener('input', function() {
+            document.getElementById('bgRotationValue').textContent = this.value + '°';
+        });
+
+        document.getElementById('dotsColorType').addEventListener('change', function() {
+            const gradientOptions = document.getElementById('dotsGradientOptions');
+            gradientOptions.classList.toggle('hidden', this.value === 'single');
+            generateVietQR();
+        });
+        
+        document.getElementById('bgColorType').addEventListener('change', function() {
+            const gradientOptions = document.getElementById('bgGradientOptions');
+            gradientOptions.classList.toggle('hidden', this.value === 'single');
+            generateVietQR();
+        });
+
+        document.getElementById('qrImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const imageInfo = document.getElementById('imageInfo');
+            const deleteBtn = document.getElementById('deleteImage');
+            
+            if (file) {
+                uploadedImage = URL.createObjectURL(file);
+                imageInfo.textContent = `Đã upload: ${file.name} (${(file.size/1024).toFixed(1)}KB)`;
+                deleteBtn.classList.remove('hidden');
+                generateVietQR();
+            } else {
+                deleteImage();
+            }
+        });
+
+        async function generateVietQR() {
+            const formData = {
+                acquierID: document.getElementById('acquierID').value,
+                consumerID: document.getElementById('consumerID').value,
+                amount: document.getElementById('amount').value,
+                additionalData: document.getElementById('additionalData').value
+            };
+
+            try {
+                const response = await fetch('/generate-qr', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    generateStyledQR(result.qrData);
+                } else {
+                    alert('Lỗi: ' + result.error);
+                }
+            } catch (error) {
+                alert('Lỗi kết nối: ' + error.message);
+            }
+        }
+
+        ['acquierID', 'consumerID', 'amount', 'additionalData'].forEach(id => {
+            document.getElementById(id).addEventListener('change', generateVietQR);
+            document.getElementById(id).addEventListener('input', generateVietQR);
+        });
+
+        generateVietQR();
+
+        function generateStyledQR(qrData) {
+            const container = document.getElementById('qrContainer');
+            const options = getQROptions(qrData);
+            
+            container.innerHTML = '';
+            qrCode = new QRCodeStyling(options);
+            qrCode.append(container);
+        }
+
+        function getQROptions(qrData) {
+            const size = parseInt(document.getElementById('qrSize').value);
+            const margin = parseInt(document.getElementById('qrMargin').value);
+            const dotsType = document.getElementById('dotsType').value;
+            const dotsColorType = document.getElementById('dotsColorType').value;
+            const cornersSquareType = document.getElementById('cornersSquareType').value;
+            const cornersDotType = document.getElementById('cornersDotType').value;
+            const bgColorType = document.getElementById('bgColorType').value;
+            const imageSize = parseInt(document.getElementById('imageSize').value) / 100;
+            const imageMargin = parseInt(document.getElementById('imageMargin').value);
+            const hideBackgroundDots = document.getElementById('hideBackgroundDots').checked;
+
+            let dotsOptions = {
+                type: dotsType
+            };
+
+            if (dotsColorType === 'single') {
+                dotsOptions.color = document.getElementById('dotsColor').value;
+            } else {
+                dotsOptions.gradient = {
+                    type: document.getElementById('dotsGradientType').value,
+                    rotation: parseInt(document.getElementById('dotsGradientRotation').value) * Math.PI / 180,
+                    colorStops: [
+                        { offset: 0, color: document.getElementById('dotsGradientColor1').value },
+                        { offset: 1, color: document.getElementById('dotsGradientColor2').value }
+                    ]
+                };
+            }
+
+            let backgroundOptions = {};
+            if (bgColorType === 'single') {
+                backgroundOptions.color = document.getElementById('bgColor').value;
+            } else {
+                backgroundOptions.gradient = {
+                    type: document.getElementById('bgGradientType').value,
+                    rotation: parseInt(document.getElementById('bgGradientRotation').value) * Math.PI / 180,
+                    colorStops: [
+                        { offset: 0, color: document.getElementById('bgGradientColor1').value },
+                        { offset: 1, color: document.getElementById('bgGradientColor2').value }
+                    ]
+                };
+            }
+
+            const cornersSquareOptions = {
+                type: cornersSquareType,
+                color: document.getElementById('cornersSquareColor').value
+            };
+
+            const cornersDotOptions = {
+                type: cornersDotType,
+                color: document.getElementById('cornersDotColor').value
+            };
+
+            let imageOptions = {};
+            if (uploadedImage) {
+                imageOptions = {
+                    image: uploadedImage,
+                    imageSize: imageSize,
+                    margin: imageMargin,
+                    hideBackgroundDots: hideBackgroundDots,
+                    crossOrigin: "anonymous"
+                };
+            }
+
+            const options = {
+                width: size,
+                height: size,
+                type: "canvas",
+                data: qrData,
+                margin: margin,
+                dotsOptions: dotsOptions,
+                backgroundOptions: backgroundOptions,
+                cornersSquareOptions: cornersSquareOptions,
+                cornersDotOptions: cornersDotOptions,
+                imageOptions: imageOptions
+            };
+
+            if (uploadedImage) {
+                options.image = uploadedImage;
+            }
+
+            return options;
+        }
+
+
+
+
+
+        const controls = [
+            'qrSize', 'qrMargin', 'dotsType', 'dotsColor', 'dotsColorType',
+            'dotsGradientType', 'dotsGradientColor1', 'dotsGradientColor2', 'dotsGradientRotation',
+            'cornersSquareType', 'cornersSquareColor', 'cornersDotType', 'cornersDotColor',
+            'bgColorType', 'bgColor', 'bgGradientType', 'bgGradientColor1', 'bgGradientColor2', 'bgGradientRotation',
+            'imageSize', 'imageMargin', 'hideBackgroundDots'
+        ];
+
+        const imageControls = ['imageSize', 'imageMargin', 'hideBackgroundDots'];
+
+        controls.forEach(controlId => {
+            const element = document.getElementById(controlId);
+            if (element) {
+                element.addEventListener('change', generateVietQR);
+                element.addEventListener('input', generateVietQR);
+            }
+        });
+
+        imageControls.forEach(controlId => {
+            const element = document.getElementById(controlId);
+            if (element) {
+                element.addEventListener('change', generateVietQR);
+                element.addEventListener('input', generateVietQR);
+            }
+        });
+
+        function deleteImage() {
+            if (uploadedImage) {
+                URL.revokeObjectURL(uploadedImage);
+            }
+            uploadedImage = null;
+            document.getElementById('imageInfo').textContent = '';
+            document.getElementById('deleteImage').classList.add('hidden');
+            document.getElementById('qrImage').value = '';
+            generateVietQR();
+        }
+        
+        $(document).ready(function() {
+            $('.select2-bank').select2({
+                placeholder: 'Chọn ngân hàng...',
+                allowClear: true,
+                width: '100%',
+                language: {
+                    noResults: function() {
+                        return "Không tìm thấy ngân hàng";
+                    }
+                }
+            }).on('change', function() {
+                generateVietQR();
+            });
+        });
+    </script>
+</body>
+</html> 

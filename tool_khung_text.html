@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tool Khoanh Vùng Text</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+      .container-wrapper {
+        position: relative;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 2px solid #333;
+        display: inline-block;
+        overflow: hidden;
+      }
+
+      /* The image will be rendered here */
+      #preview {
+        display: block;
+        max-width: 1000px;
+        caret-color: transparent;
+      }
+
+      /* The selection box overlay */
+      #selection-box {
+        position: absolute;
+        border: 2px dashed #00ff00;
+        background-color: rgba(0, 255, 0, 0.2);
+        pointer-events: none; /* Let mouse events pass through to container */
+        display: none;
+      }
+
+      #info-panel {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 300px;
+        z-index: 100;
+      }
+
+      .info-row {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .info-value {
+        font-weight: bold;
+        color: #d00;
+        font-family: monospace;
+        font-size: 1.1em;
+      }
+
+      input[type="file"] {
+        margin-bottom: 20px;
+        padding: 10px;
+        background: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tool Khoanh Vùng Vị Trí Text</h1>
+    <input type="file" id="fileInp" accept="image/*" />
+
+    <div id="info-panel">
+      <h3>Thông tin vùng chọn</h3>
+      <div class="info-row">
+        Start (X, Y): <span id="startXY" class="info-value">-</span>
+      </div>
+      <div class="info-row">
+        Size (W, H): <span id="sizeWH" class="info-value">-</span>
+      </div>
+      <div class="info-row">
+        Center (X, Y): <span id="centerXY" class="info-value">-</span>
+      </div>
+      <hr />
+      <small>Kéo chuột trên ảnh để tạo vùng chọn.</small>
+    </div>
+
+    <div class="container-wrapper" id="imgContainer">
+      <img id="preview" draggable="false" />
+      <div id="selection-box"></div>
+    </div>
+
+    <script>
+      const fileInp = document.getElementById("fileInp");
+      const preview = document.getElementById("preview");
+      const imgContainer = document.getElementById("imgContainer");
+      const selectionBox = document.getElementById("selection-box");
+
+      // Info Elements
+      const elStartXY = document.getElementById("startXY");
+      const elSizeWH = document.getElementById("sizeWH");
+      const elCenterXY = document.getElementById("centerXY");
+
+      let originalWidth = 0;
+      let originalHeight = 0;
+      let isDrawing = false;
+      let startX = 0;
+      let startY = 0;
+
+      fileInp.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = function () {
+            originalWidth = this.width;
+            originalHeight = this.height;
+            preview.src = this.src;
+            selectionBox.style.display = "none";
+            resetInfo();
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      // Mouse Events
+      imgContainer.addEventListener("mousedown", (e) => {
+        if (!preview.src) return;
+        isDrawing = true;
+
+        const rect = imgContainer.getBoundingClientRect();
+        startX = e.clientX - rect.left;
+        startY = e.clientY - rect.top;
+
+        // Reset box visually
+        selectionBox.style.left = startX + "px";
+        selectionBox.style.top = startY + "px";
+        selectionBox.style.width = "0px";
+        selectionBox.style.height = "0px";
+        selectionBox.style.display = "block";
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isDrawing) return;
+
+        const rect = imgContainer.getBoundingClientRect();
+        const currentX = Math.min(
+          Math.max(0, e.clientX - rect.left),
+          rect.width
+        );
+        const currentY = Math.min(
+          Math.max(0, e.clientY - rect.top),
+          rect.height
+        );
+
+        const width = Math.abs(currentX - startX);
+        const height = Math.abs(currentY - startY);
+        const left = Math.min(currentX, startX);
+        const top = Math.min(currentY, startY);
+
+        selectionBox.style.left = left + "px";
+        selectionBox.style.top = top + "px";
+        selectionBox.style.width = width + "px";
+        selectionBox.style.height = height + "px";
+
+        calculateRealCoords(left, top, width, height);
+      });
+
+      window.addEventListener("mouseup", () => {
+        isDrawing = false;
+      });
+
+      function calculateRealCoords(visLeft, visTop, visWidth, visHeight) {
+        // Get current displayed scale
+        const rect = preview.getBoundingClientRect(); // Actual displayed size
+        const scaleX = originalWidth / rect.width;
+        const scaleY = originalHeight / rect.height;
+
+        const realX = Math.round(visLeft * scaleX);
+        const realY = Math.round(visTop * scaleY);
+        const realW = Math.round(visWidth * scaleX);
+        const realH = Math.round(visHeight * scaleY);
+
+        const centerX = Math.round(realX + realW / 2);
+        const centerY = Math.round(realY + realH / 2);
+
+        elStartXY.innerText = `${realX}, ${realY}`;
+        elSizeWH.innerText = `${realW} x ${realH}`;
+        elCenterXY.innerText = `${centerX}, ${centerY}`;
+      }
+
+      function resetInfo() {
+        elStartXY.innerText = "-";
+        elSizeWH.innerText = "-";
+        elCenterXY.innerText = "-";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+    "qr": {
+        "x": 287,
+        "y": 189,
+        "size": 227
+    },
+    "bank_name": {
+        "x": 241,
+        "y": 595,
+        "size": 20,
+        "color": "#000000",
+        "align": "left",
+        "font": "default"
+    },
+    "acc_num": {
+        "x": 130,
+        "y": 112,
+        "size": 20,
+        "color": "#000000",
+        "align": "left",
+        "font": "default"
+    }
+}
